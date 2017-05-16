@@ -62,24 +62,31 @@ int main()
 		return -1;
 	}
 	namedWindow("Video", CV_WINDOW_AUTOSIZE);
-	currentLocation = new cv_Point(0, 0);
-	cv_Point* destination = new cv_Point(9,8);
-	DefaneTemplate();
+	/*currentLocation = new cv_Point(0, 0);
+	cv_Point* destination = new cv_Point(9,8);*/
+	//DefaneTemplate();
 		//построение маршрута
-	vector<cv_Point> route = RoutePlanning(*currentLocation, *destination, templates);
+	//vector<cv_Point> route = RoutePlanning(*currentLocation, *destination, templates);
 	//	MoveToGivenPoint(*currentLocation, route);
 	
 	//IplImage* templMain = cvLoadImage(route[0].filename);
 	//OtherFunction(currentLocation, *label.location, i);
 	while (true) {
 		cap >> frame;
-		
-
-		if (FindQrCode(frame)) {
-			QRCode qr = QRCode(frame);
-			if (qr.GetOrientation() != NORTH) cout << "Qr-code is bad" << endl;
-			else qr.Read();
+		try
+		{
+			if (FindQrCode(frame)) {
+				/*QRCode qr = QRCode(frame);
+				if (qr.GetOrientation() != NORTH) cout << "Qr-code is bad" << endl;
+				else qr.Read();*/
+			}
 		}
+		catch(Exception)
+		{
+			
+		}
+
+		
 
 		imshow("Video", frame);
 		int c = cvWaitKey(50);

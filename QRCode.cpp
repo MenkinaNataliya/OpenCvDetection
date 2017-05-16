@@ -167,21 +167,61 @@ void QRCode::DrawTarget()
 		dst.push_back(Point2f(0, qr.rows));
 
 
-		//выбираем самый левый верхний пиксель
-		int lefttopx = min({ L[0].x, M[0].x, O[0].x, L[1].x, M[1].x, O[1].x, L[2].x, M[2].x, O[2].x , L[3].x, M[3].x, O[3].x });
-		int lefttopY = min({ L[0].y, M[0].y, O[0].y, L[1].y, M[1].y, O[1].y, L[2].y, M[2].y, O[2].y , L[3].y, M[3].y, O[3].y });
-		//выбираем самый левый нижний пиксель
-		int leftbotx = max({ L[0].x, M[0].x, O[0].x, L[1].x, M[1].x, O[1].x, L[2].x, M[2].x, O[2].x , L[3].x, M[3].x, O[3].x });
-		int leftbotY = max({ L[0].y, M[0].y, O[0].y, L[1].y, M[1].y, O[1].y, L[2].y, M[2].y, O[2].y , L[3].y, M[3].y, O[3].y });
+		////выбираем самый левый верхний пиксель
+		//int lefttopx = min({ L[0].x, M[0].x, O[0].x, L[1].x, M[1].x, O[1].x, L[2].x, M[2].x, O[2].x , L[3].x, M[3].x, O[3].x });
+		//int lefttopY = min({ L[0].y, M[0].y, O[0].y, L[1].y, M[1].y, O[1].y, L[2].y, M[2].y, O[2].y , L[3].y, M[3].y, O[3].y });
+		////выбираем самый левый нижний пиксель
+		//int leftbotx = max({ L[0].x, M[0].x, O[0].x, L[1].x, M[1].x, O[1].x, L[2].x, M[2].x, O[2].x , L[3].x, M[3].x, O[3].x });
+		//int leftbotY = max({ L[0].y, M[0].y, O[0].y, L[1].y, M[1].y, O[1].y, L[2].y, M[2].y, O[2].y , L[3].y, M[3].y, O[3].y });
 
-		if (leftbotx + 30 >= 640)leftbotx = 639 - 30;
-		if (leftbotY + 30 >= 640)leftbotY = 639 - 30;
+		//if (leftbotx + 30 >= 640)leftbotx = 639 - 30;
+		//if (leftbotY + 30 >= 640)leftbotY = 639 - 30;
 
-		Rect r(Point(contours[top].front().x -10, contours[top].front().y-10), Point(640, 480)); // Создание региона
-		Mat img2;
-		// Копирование региона в отдельное изображение
-		image(r).copyTo(img2);
-		imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/image01_res6.jpg", img2);
+
+		//int minx = contours[B].front().x;
+		//int miny = contours[B].front().y;
+		//int maxx = contours[B].front().x;
+		//int maxy = contours[B].front().y;
+		//for (int i = 0; i<contours[B].size(); i++)
+		//{
+		//	if (contours[B][i].x < minx) minx = contours[B][i].x;
+		//	if (contours[B][i].y < miny) miny = contours[B][i].y;
+		//	if (contours[B][i].x > maxx) maxx = contours[B][i].x;
+		//	if (contours[B][i].y> maxy) maxy = contours[B][i].y;
+		//}
+		//for (int i = 0; i<contours[A].size(); i++)
+		//{
+		//	if (contours[A][i].x < minx) minx = contours[A][i].x;
+		//	if (contours[A][i].y < miny) miny = contours[A][i].y;
+		//	if (contours[A][i].x > maxx) maxx = contours[A][i].x;
+		//	if (contours[A][i].y> maxy) maxy = contours[A][i].y;
+		//}
+		//for (int i = 0; i<contours[C].size(); i++)
+		//{
+		//	if (contours[C][i].x < minx) minx = contours[C][i].x;
+		//	if (contours[C][i].y < miny) miny = contours[C][i].y;
+		//	if (contours[C][i].x > maxx) maxx = contours[C][i].x;
+		//	if (contours[C][i].y> maxy) maxy = contours[C][i].y;
+		//}
+		//Rect r(Point(minx - 10, miny - 10), Point(640, 480)); // обрезали по верхней точке
+		//Mat img2;
+		//Mat img3;
+		////Копирование региона в отдельное изображение
+		//image(r).copyTo(img2);
+
+		//auto m = getRotationMatrix2D(Point(img2.cols / 2, img2.rows / 2), 30, 1);
+		//circle(image, Point(minx, maxy), 3, Scalar(189, 70, 5));
+		//warpAffine(img2, img3, m, Size(img2.cols, img2.rows));
+
+		///*Point2f	pts1[] = { {float(minx), float(miny)},{float(maxx),float(maxy)}, {float(minx), float(maxy)} , {float(maxx), float(miny)}};
+		//Point2f	pts2[] = { {0,0}, {640,480}, {0,640}, {640,0} };
+		//Mat m = getPerspectiveTransform(pts1, pts2);
+
+		//warpPerspective(image, img3, m, image.size());*/
+
+		//imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/image01.jpg", image);
+		//imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/image02.jpg", img2);
+		//imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/image01_BC.jpg", img3);
 
 		//Draw contours on the image
 		drawContours(image, contours, top, Scalar(255, 200, 0), 2, 8, hierarchy, 0);
