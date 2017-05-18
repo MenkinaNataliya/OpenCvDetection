@@ -23,6 +23,7 @@
 #include <vector>
 #include "cv_Templates.h"
 #include "cv_AdditionalPoint.h"
+//#include "QRCode.h"
 
 using namespace std;
 
@@ -32,7 +33,7 @@ extern
 
 void DefaneTemplate();
 
-bool FindQrCode(Mat image);
+//QRCode FindQrCode(Mat image);
 
 enum Orientation { NORTH, WEST, EAST, SOUTH };
 extern

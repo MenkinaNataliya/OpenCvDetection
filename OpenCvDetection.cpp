@@ -8,7 +8,7 @@
 #include "cv_Templates.h"
 
 
-
+QRCode FindQrCode(Mat image);
 cv_Point* currentLocation;
 vector<cv_Templates> templates;
 
@@ -71,23 +71,20 @@ int main()
 	
 	//IplImage* templMain = cvLoadImage(route[0].filename);
 	//OtherFunction(currentLocation, *label.location, i);
+	int count = 0;
 	while (true) {
 		cap >> frame;
-		try
+		if(count ==10)
 		{
-			if (FindQrCode(frame)) {
-				/*QRCode qr = QRCode(frame);
-				if (qr.GetOrientation() != NORTH) cout << "Qr-code is bad" << endl;
-				else qr.Read();*/
+			QRCode code = FindQrCode(frame);
+			bool t = !code;
+			if (!code) {
+				if (code.GetOrientation() != NORTH) cout << "Qr-code is bad" << endl;
+				else code.Read();
 			}
+			count = -1;
 		}
-		catch(Exception)
-		{
-			
-		}
-
-		
-
+		count++;
 		imshow("Video", frame);
 		int c = cvWaitKey(50);
 		if ((char)c == 27)			break;

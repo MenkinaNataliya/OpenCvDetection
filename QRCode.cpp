@@ -9,35 +9,66 @@ QRCode::QRCode(Mat _image)
 	DrawTarget();
 	//Resize();
 }
+QRCode::QRCode()
+{
+	image = 0;
+}
+QRCode::QRCode(Mat _image, Orientation orient, int size)
+{
+	image = _image;
+	orientation = orient;
+	sizeBlock = size;
+
+}
+
+bool QRCode::operator !(){
+	if (image.cols == 0 || image.rows == 0) return false;
+	else return true;
+}
 
 QRCode::~QRCode() {}
 
-void QRCode::Resize()
-{
-	if(this->orientation == NORTH)
-	{
-
-		//выбираем самый левый верхний пиксель
-		int lefttopx = min({ L[0].x, M[0].x, O[0].x, L[1].x, M[1].x, O[1].x, L[2].x, M[2].x, O[2].x , L[3].x, M[3].x, O[3].x });
-		int lefttopY = min({ L[0].y, M[0].y, O[0].y, L[1].y, M[1].y, O[1].y, L[2].y, M[2].y, O[2].y , L[3].y, M[3].y, O[3].y });
-		//выбираем самый левый нижний пиксель
-		int leftbotx = max({ L[0].x, M[0].x, O[0].x, L[1].x, M[1].x, O[1].x, L[2].x, M[2].x, O[2].x , L[3].x, M[3].x, O[3].x });
-		int leftbotY = max({ L[0].y, M[0].y, O[0].y, L[1].y, M[1].y, O[1].y, L[2].y, M[2].y, O[2].y , L[3].y, M[3].y, O[3].y });
-		
-		if (leftbotx + 30 >= 640)leftbotx = 639 - 30;
-		if (leftbotY + 30 >= 640)leftbotY = 639 - 30;
-		
-		Rect r(lefttopx - 10, lefttopY - 10,640 - lefttopx, 480 - lefttopY); // Создание региона
-		Mat img2;
-		// Копирование региона в отдельное изображение
-		image(r).copyTo(img2);
-		imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/image01_res6.jpg", img2);
-	}
-	
-}
-
 void QRCode::CalculateOrientation()
 {
+	int y, x;
+	for (y = 0; y < image.rows; y++)
+	{
+		uchar* ptr = (uchar*)(image.data + y * image.step);
+		for (x = 0; x < image.cols; x++) {
+			int color;
+			if (ptr[3 * x]>120 && ptr[3 * x + 1]>120 && ptr[3 * x + 2]>120)color = 255;
+			else color = 0;
+			ptr[3 * x] = ptr[3 * x + 1] = ptr[3 * x + 2] = color;
+		}
+	}
+	//	cv::imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/tmp1.jpg", image);
+	for (y = 0; y < image.rows; y++)
+	{
+		uchar* ptr = (uchar*)(image.data + y * image.step);
+		for (x = 0; x < image.cols; x++) {
+			if (ptr[3 * x]>120)//white
+			{
+				bool flag = false;
+				int color;
+				if (x == 0 || y == 0) flag = false;
+				else
+				{//если с трех сторон черные значит и она черная
+					uchar* ptr1 = (uchar*)(image.data + (y - 1) * image.step);
+					uchar* ptr2 = (uchar*)(image.data + (y + 1) * image.step);
+					int xx = x - 1, xxx = x + 1;
+					if (ptr[3 * xx] < 120 && ptr1[3 * x] < 120 && (ptr2[3 * x] < 120 || ptr[3 * xxx] < 120) ||
+						ptr2[3 * x] < 120 && ptr[3 * xxx] < 120 && (ptr[3 * xx] < 120 || ptr1[3 * x] < 120)) color = 0;
+					else color = 255;
+					flag = true;
+				}
+				if (flag) ptr[3 * x] = ptr[3 * x + 1] = ptr[3 * x + 2] = color;
+			}
+			else
+			{
+
+			}
+		}
+	}
 	cv_getContours(image, contours, hierarchy);//получили контур,
 
 	float AB, BC, CA, dist;
@@ -79,7 +110,7 @@ void QRCode::CalculateOrientation()
 			mark = mark + 1;
 		}
 	}
-
+	imshow("", image);
 	if (mark >= 2)		// Ensure we have (atleast 3; namely A,B,C) 'Alignment Markers' discovered
 	{	// We have found the 3 markers for the QR code; Now we need to determine which of them are 'top', 'right' and 'bottom' markers
 		// Determining the 'top' marker
@@ -138,8 +169,7 @@ void QRCode::DrawTarget()
 	Mat qr = Mat::zeros(100, 100, CV_8UC3);
 	Mat qr_gray = Mat::zeros(100, 100, CV_8UC1);
 	Mat qr_thres = Mat::zeros(100, 100, CV_8UC1);
-	if (top < contours.size() && right < contours.size() && bottom < contours.size() && contourArea(contours[top]) > 10 && contourArea(contours[right]) > 10 && contourArea(contours[bottom]) > 10)
-	{
+
 		vector<Point2f>  tempL, tempM, tempO;
 		Point2f N;
 		vector<Point2f> src, dst;		// src - Source Points basically the 4 end co-ordinates of the overlay image
@@ -167,68 +197,12 @@ void QRCode::DrawTarget()
 		dst.push_back(Point2f(0, qr.rows));
 
 
-		////выбираем самый левый верхний пиксель
-		//int lefttopx = min({ L[0].x, M[0].x, O[0].x, L[1].x, M[1].x, O[1].x, L[2].x, M[2].x, O[2].x , L[3].x, M[3].x, O[3].x });
-		//int lefttopY = min({ L[0].y, M[0].y, O[0].y, L[1].y, M[1].y, O[1].y, L[2].y, M[2].y, O[2].y , L[3].y, M[3].y, O[3].y });
-		////выбираем самый левый нижний пиксель
-		//int leftbotx = max({ L[0].x, M[0].x, O[0].x, L[1].x, M[1].x, O[1].x, L[2].x, M[2].x, O[2].x , L[3].x, M[3].x, O[3].x });
-		//int leftbotY = max({ L[0].y, M[0].y, O[0].y, L[1].y, M[1].y, O[1].y, L[2].y, M[2].y, O[2].y , L[3].y, M[3].y, O[3].y });
-
-		//if (leftbotx + 30 >= 640)leftbotx = 639 - 30;
-		//if (leftbotY + 30 >= 640)leftbotY = 639 - 30;
-
-
-		//int minx = contours[B].front().x;
-		//int miny = contours[B].front().y;
-		//int maxx = contours[B].front().x;
-		//int maxy = contours[B].front().y;
-		//for (int i = 0; i<contours[B].size(); i++)
-		//{
-		//	if (contours[B][i].x < minx) minx = contours[B][i].x;
-		//	if (contours[B][i].y < miny) miny = contours[B][i].y;
-		//	if (contours[B][i].x > maxx) maxx = contours[B][i].x;
-		//	if (contours[B][i].y> maxy) maxy = contours[B][i].y;
-		//}
-		//for (int i = 0; i<contours[A].size(); i++)
-		//{
-		//	if (contours[A][i].x < minx) minx = contours[A][i].x;
-		//	if (contours[A][i].y < miny) miny = contours[A][i].y;
-		//	if (contours[A][i].x > maxx) maxx = contours[A][i].x;
-		//	if (contours[A][i].y> maxy) maxy = contours[A][i].y;
-		//}
-		//for (int i = 0; i<contours[C].size(); i++)
-		//{
-		//	if (contours[C][i].x < minx) minx = contours[C][i].x;
-		//	if (contours[C][i].y < miny) miny = contours[C][i].y;
-		//	if (contours[C][i].x > maxx) maxx = contours[C][i].x;
-		//	if (contours[C][i].y> maxy) maxy = contours[C][i].y;
-		//}
-		//Rect r(Point(minx - 10, miny - 10), Point(640, 480)); // обрезали по верхней точке
-		//Mat img2;
-		//Mat img3;
-		////Копирование региона в отдельное изображение
-		//image(r).copyTo(img2);
-
-		//auto m = getRotationMatrix2D(Point(img2.cols / 2, img2.rows / 2), 30, 1);
-		//circle(image, Point(minx, maxy), 3, Scalar(189, 70, 5));
-		//warpAffine(img2, img3, m, Size(img2.cols, img2.rows));
-
-		///*Point2f	pts1[] = { {float(minx), float(miny)},{float(maxx),float(maxy)}, {float(minx), float(maxy)} , {float(maxx), float(miny)}};
-		//Point2f	pts2[] = { {0,0}, {640,480}, {0,640}, {640,0} };
-		//Mat m = getPerspectiveTransform(pts1, pts2);
-
-		//warpPerspective(image, img3, m, image.size());*/
-
-		//imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/image01.jpg", image);
-		//imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/image02.jpg", img2);
-		//imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/image01_BC.jpg", img3);
-
 		//Draw contours on the image
 		drawContours(image, contours, top, Scalar(255, 200, 0), 2, 8, hierarchy, 0);
 		drawContours(image, contours, right, Scalar(0, 0, 255), 2, 8, hierarchy, 0);
 		drawContours(image, contours, bottom, Scalar(255, 0, 100), 2, 8, hierarchy, 0);
 		imshow("Target", image);
-	}
+
 }
 
 string QRCode::Read()

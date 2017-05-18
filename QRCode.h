@@ -27,7 +27,11 @@ public:
 
 	string Read();
 
+	bool operator !();
+
 	QRCode(Mat image);
+	QRCode(Mat image, Orientation orient, int size);
+	QRCode();
 	~QRCode();
 };
 

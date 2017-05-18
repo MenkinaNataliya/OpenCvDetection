@@ -1,2 +1,28 @@
-﻿  OpenCvDetection.vcxproj -> D:\Учеба\Сервисный робот\OpenCvDetection\x64\Debug\OpenCvDetection.exe
+﻿  QRCode.cpp
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(83): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(75): warning C4101: orientation: неиспользованная локальная переменная
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(195): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(196): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(197): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(226): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(251): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(294): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(300): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(319): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(343): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(344): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(366): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(372): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(394): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(401): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(417): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(441): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(442): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(464): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\qrcode.cpp(470): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+  OpenCvDetection.cpp
+  DetectQRCode.cpp
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\detectqrcode.cpp(140): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  Создание кода...
+  OpenCvDetection.vcxproj -> D:\Учеба\Сервисный робот\OpenCvDetection\x64\Debug\OpenCvDetection.exe
   OpenCvDetection.vcxproj -> D:\Учеба\Сервисный робот\OpenCvDetection\x64\Debug\OpenCvDetection.pdb (Full PDB)
