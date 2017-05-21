@@ -2,11 +2,11 @@
 class cv_Point
 {
 public:
-	float x;
-	float y;
+	int x;
+	int y;
 
-	double DistanceCalculation(cv_Point dst);
-	cv_Point(float _x, float _y);
+	double DistanceCalculation(cv_Point dst) const;
+	cv_Point(int _x, int _y);
 	~cv_Point();
 };
 

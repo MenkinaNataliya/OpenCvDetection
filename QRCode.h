@@ -11,6 +11,8 @@ private:
 	int top, right, bottom;
 	int sizeBlock;
 	float slope;
+	bool correctCode;
+	bool doubleRead;
 
 	void CalculateOrientation();
 	void ReadCountPackage(int onebit, int twobit, int threebit, int i, int j, int xInfo, int yInfo, int count, int numberPackages[]);
@@ -26,8 +28,8 @@ public:
 	Orientation GetOrientation() const;
 
 	string Read();
-
-	bool operator !();
+	string ReRead();
+	bool Empty();
 
 	QRCode(Mat image);
 	QRCode(Mat image, Orientation orient, int size);

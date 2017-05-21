@@ -283,55 +283,134 @@ void cv_getContours(Mat image, vector<vector<Point> >& contours, vector<Vec4i> &
 	findContours(edges, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); // Find contours with hierarchy
 }
 
+enum Direction { RIGHT_BOTTOM, LEFT_BOTTOM, RIGHT_TOP ,LEFT_TOP, RIGHT, LEFT, TOP, BOTTOM, CURRENT};
+
+Direction DirectionCheck(cv_Point src, cv_Point dst)
+{
+	if (src.x == dst.x)
+		if (src.y > dst.y)return  BOTTOM;
+		else
+			if (src.y < dst.y) 	return TOP;
+			else return CURRENT;
+	else
+		if (src.x > dst.x)
+			if (src.y > dst.y) return LEFT_BOTTOM;
+			else
+				if (src.y < dst.y) 	return LEFT_TOP;
+				else return LEFT;
+		else
+			if (src.y > dst.y) return RIGHT_BOTTOM;
+			else
+				if (src.y < dst.y) 	return RIGHT_TOP;
+				else return RIGHT;
+}
+bool VerificationOfAdjacentDirections(cv_Point src, cv_Point dst,Direction dirMain, Direction dirLocal)
+{
+	return VerificationOfAdjacentDirections(src,dst,dirMain, dirLocal);
+}
+
+bool VerificationOfAdjacentDirections(cv_Point src, cv_Point dst,int dirMain, int dirLocal)
+{
+	
+	if (dirMain == LEFT_TOP)
+		if (dirLocal == LEFT || dirLocal == LEFT_TOP || dirLocal == TOP)
+		{
+			if (src.x >= dst.x && src.y <= dst.y) return true;
+			return false;
+		}
+	if (dirMain == LEFT_BOTTOM)
+		if (dirLocal == LEFT || dirLocal == LEFT_BOTTOM || dirLocal == BOTTOM) {
+			if (src.x >= dst.x && src.y >= dst.y) return true;
+			return false;
+		}
+	if (dirMain == LEFT)
+		if (dirLocal == LEFT_TOP || dirLocal == LEFT_BOTTOM || dirLocal == TOP || dirLocal == BOTTOM || dirLocal == LEFT) {
+			if (src.x >= dst.x) return true;
+			return false;
+		}
+
+	if (dirMain == RIGHT_TOP)
+		if (dirLocal == RIGHT || dirLocal == RIGHT_TOP || dirLocal == TOP) {
+			if (src.x <= dst.x && src.y <= dst.y) return true;
+			return false;
+		}
+	if (dirMain == RIGHT_BOTTOM)
+		if (dirLocal == RIGHT || dirLocal == RIGHT_BOTTOM || dirLocal == BOTTOM) {
+			if (src.x <= dst.x && src.y >= dst.y) return true;
+			return false;
+		}
+	if (dirMain == RIGHT)
+		if (dirLocal == RIGHT_TOP || dirLocal == RIGHT_BOTTOM || dirLocal == TOP || dirLocal == BOTTOM || dirLocal == RIGHT) {
+			if (src.x <= dst.x ) return true;
+			return false;
+		}
+
+	if (dirMain == TOP)
+		if (dirLocal == RIGHT_TOP || dirLocal == LEFT_TOP || dirLocal == TOP || dirLocal == RIGHT || dirLocal == LEFT) {
+			if (src.y <= dst.y) return true;
+			return false;
+		}
+	if (dirMain == BOTTOM)
+		if (dirLocal == RIGHT_BOTTOM || dirLocal == LEFT_BOTTOM || dirLocal == BOTTOM || dirLocal == RIGHT || dirLocal == LEFT) {
+			if ( src.y>= dst.y) return true;
+			return false;
+		}
+
+	return false;
+}
 
 vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Templates> templates)
 {
-
 	vector<cv_Point> map;
+	int direct = DirectionCheck(src,dst);/*определ€ем направление движени€*/
 
-	vector<float> d; // минимальное рассто€ние
+	float minDistanse, dopDistanse;
+	bool isPop = false;
+	int index = 0; int dir=0;//все равно перезапишетс€
+	/*начинаем строить маршрут*/
+	while (true){
+		for (int i = 0; i < templates.size(); i++){
+			float dist;
 
-					 //	vector<int> v ; // посещенные вершины
-	float temp;
-	int minindex, min;
-
-	vector<cv_AdditionalPoint> dopPoint;
-	for (int i = 0; i < templates.size(); i++)
-	{
-		dopPoint.push_back(cv_AdditionalPoint(templates[i].location));
-		d.push_back(10000);
-	}
-	// Ўаг алгоритма
-	do {
-		minindex = 10000;
-		min = 10000;
-		for (int i = 0; i<templates.size(); i++)
-		{ // ≈сли вершину ещЄ не обошли и вес меньше min
-			if ((dopPoint[i].isInvolved == false) && (dopPoint[i].location->DistanceCalculation(dst) < min))
-			{ // ѕереприсваиваем значени€
-				min = dopPoint[i].location->DistanceCalculation(dst);
-				minindex = i;
+			if (map.empty()) {
+				dist = src.DistanceCalculation(*templates[i].location);
+				dir = DirectionCheck(src, *templates[i].location);
 			}
-		}
-		// ƒобавл€ем найденный минимальный вес
-		// к текущему весу вершины
-		// и сравниваем с текущим минимальным весом вершины
-		if (minindex != 10000)
-		{
-			for (int i = 0; i < templates.size(); i++)
-			{
-				float distanse = dopPoint[minindex].location->DistanceCalculation(*dopPoint[i].location);
-				if (distanse > 0)
-				{
-					temp = min + distanse;
-					if (temp < d[i])
-						d[i] = temp;
+			else {
+				dist = map[map.size() - 1].DistanceCalculation(*templates[i].location);
+				dir = DirectionCheck(map[map.size() - 1], *templates[i].location);
+			}
+
+			if (VerificationOfAdjacentDirections(*templates[i].location, dst, direct, dir) && dist != 0){
+				if (dist < minDistanse) {
+					if (dist < dopDistanse) {
+						isPop = false;
+
+						if (!map.empty() && map.size() != 1) {
+							float twoPointDistance = map[map.size() - 2].DistanceCalculation(*templates[i].location);
+							float threePointDistance = map[map.size() - 1].DistanceCalculation(map[map.size() - 2]) + dist;
+							if (threePointDistance - twoPointDistance <= 1 
+								&& abs(map[map.size() - 1].x - (*templates[i].location).x) <=2 
+								&& abs(map[map.size() - 1].y - (*templates[i].location).y) <= 2){
+
+								isPop = true;
+								minDistanse = twoPointDistance; 
+								dopDistanse = dist;
+							}
+							else minDistanse = dist;
+						}
+						else	minDistanse = dist;
+						index = i;
+					}
 				}
 			}
-			dopPoint[minindex].isInvolved = true;
-			map.push_back(*dopPoint[minindex].location);
 		}
-	} while (minindex < 10000);
+		if (isPop) map.pop_back();
+		map.push_back(*templates[index].location);
+		isPop = false; minDistanse = 1000000;
+		dopDistanse = 1000;
+		if (DirectionCheck(map[map.size() - 1], dst) == CURRENT) break;
+	}
 	return map;
 
 

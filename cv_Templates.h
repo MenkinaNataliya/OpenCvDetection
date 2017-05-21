@@ -1,18 +1,15 @@
 #pragma once
 #include "cv_Point.h"
+#include <string>
 
 class cv_Templates
 {
 public:
-	char* filename;
 	cv_Point *location;
+	std::string comment;
 
-
-	char* comment;
-	int red;
-	int green;
-	int blue;
-	cv_Templates();
+	cv_Templates(int x, int y);
+	cv_Templates(int x, int y, std::string comm);
 	~cv_Templates();
 };
 
