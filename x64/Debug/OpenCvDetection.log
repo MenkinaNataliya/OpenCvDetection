@@ -1,15 +1,18 @@
 ﻿  Header.cpp
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(79): warning C4244: =: преобразование "int" в "float", возможна потеря данных
 d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(80): warning C4244: =: преобразование "int" в "float", возможна потеря данных
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(82): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(81): warning C4244: =: преобразование "int" в "float", возможна потеря данных
 d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(83): warning C4244: =: преобразование "int" в "float", возможна потеря данных
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(137): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(84): warning C4244: =: преобразование "int" в "float", возможна потеря данных
 d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(138): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(268): warning C4244: return: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(139): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(269): warning C4244: return: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(377): warning C4244: =: преобразование "double" в "float", возможна потеря данных
 d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(381): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(385): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(396): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(397): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(310): warning C4717: VerificationOfAdjacentDirections: рекурсия на всех путях выполнения, функция вызовет переполнение стека
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(391): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(392): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(448): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(460): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(468): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.cpp(311): warning C4717: VerificationOfAdjacentDirections: рекурсия на всех путях выполнения, функция вызовет переполнение стека
   OpenCvDetection.vcxproj -> D:\Учеба\Сервисный робот\OpenCvDetection\x64\Debug\OpenCvDetection.exe
   OpenCvDetection.vcxproj -> D:\Учеба\Сервисный робот\OpenCvDetection\x64\Debug\OpenCvDetection.pdb (Full PDB)

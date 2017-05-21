@@ -22,7 +22,7 @@
 
 #include <vector>
 #include "cv_Templates.h"
-#include "cv_AdditionalPoint.h"
+
 //#include "QRCode.h"
 
 using namespace std;
@@ -50,7 +50,8 @@ bool getIntersectionPoint(Point2f a1, Point2f a2, Point2f b1, Point2f b2, Point2
 float cross(Point2f v1, Point2f v2);
 int cv_CalculationOfDimensionsSquare(vector<Point2f> top, vector<Point2f> right, vector<Point2f> bottom);
 void cv_getContours(Mat image, vector<vector<Point> >& contours, vector<Vec4i>& hierarchy);
-
-void cv_ReadQrCode(Mat image, vector<Point2f> L, vector<Point2f> M, vector<Point2f> O);
+void SendSignal(string signal);
+string GenerateSignal(vector<cv_Point> route, float deviation);
+//void cv_ReadQrCode(Mat image, vector<Point2f> L, vector<Point2f> M, vector<Point2f> O);
 
 void SendErrorMessage(char *msg);

@@ -8,6 +8,9 @@ cv_Point::cv_Point(int _x, int _y)
 	x = _x; y = _y;
 }
 
+cv_Point::cv_Point()
+{
+}
 
 cv_Point::~cv_Point()
 {

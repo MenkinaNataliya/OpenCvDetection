@@ -39,10 +39,10 @@
     <ClInclude Include="cv_Templates.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="cv_AdditionalPoint.h">
+    <ClInclude Include="Robot.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Robot.h">
+    <ClInclude Include="EquationOfLine.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,10 +74,10 @@
     <ClCompile Include="cv_Templates.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="сv_AdditionalPoint.cpp">
+    <ClCompile Include="Robot.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="Robot.cpp">
+    <ClCompile Include="EquationOfLine.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>

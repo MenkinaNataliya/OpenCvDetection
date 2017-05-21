@@ -34,7 +34,7 @@ void DefaneTemplate() {//заменить на реализацию БД
 
 int main()
 {
-	Robot robot = Robot(new cv_Point(0, 0));
+	Robot robot = Robot(new cv_Point(0, 0));//робот смотрит строго по направлению движения OY
 	DefaneTemplate();
 	std::string json = "{\"type\":\"go_to\",\"data\":{\"x\":11,\"y\":19}}";
 
@@ -50,6 +50,9 @@ int main()
 		int x = s["x"].GetInt();
 		int y = s["y"].GetInt();
 		vector<cv_Point> route = RoutePlanning(*robot.currentLocation, cv_Point(x, y), templates);
+		/*ОТПРАВЛЯЕМ НА КОЛЕСНУЮ БАЗУ СИГНАЛ С МАРШРУТОМ, ПРЕДВАРИТЕЛЬНО СФОРМИРОВАВ ЕГО*/
+		SendSignal(GenerateSignal(route, robot.deviationFromMainAxis));
+
 	}
 
 	//Mat frame;

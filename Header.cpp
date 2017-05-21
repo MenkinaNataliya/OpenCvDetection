@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Header.h"
+#include "EquationOfLine.h"
 
 
 void SendErrorMessage(char *msg)
@@ -364,7 +365,7 @@ vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Templates> 
 	vector<cv_Point> map;
 	int direct = DirectionCheck(src,dst);/*определяем направление движения*/
 
-	float minDistanse, dopDistanse;
+	float minDistanse=1000, dopDistanse=1000;
 	bool isPop = false;
 	int index = 0; int dir=0;//все равно перезапишется
 	/*начинаем строить маршрут*/
@@ -411,9 +412,66 @@ vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Templates> 
 		dopDistanse = 1000;
 		if (DirectionCheck(map[map.size() - 1], dst) == CURRENT) break;
 	}
+
+	vector<cv_Point> maptmp;
+	while(!map.empty())
+	{
+		maptmp.push_back(map[map.size()-1]);
+		map.pop_back();
+	}
+
+	map.push_back(src);
+	while (!maptmp.empty())
+	{
+		map.push_back(maptmp[maptmp.size() - 1]);
+		maptmp.pop_back();
+	}
 	return map;
+}
 
 
+void SendSignal(string signal)
+{
+	cout << signal << endl;
+}
+//Например, прямо 5 метров: f5(f - forward)
+//Назад, 2 метра : b2(b - backward)
+//Налево, 30 градусов : l30(l - left)
+//Направо, 40 градусов : r40(r - right)
+//Остановиться : s(s - stop)
+string GenerateSignal(vector<cv_Point> route, float deviation)
+{
+	string signal;
+	//вычислили угол между ОУ и первой дистанцией
+	EquationOfLine first = EquationOfLine(cv_Point(0, 0), cv_Point(0, 1));
+	EquationOfLine second = EquationOfLine(route[0], route[1]);
+	int angle = first.CalculationOfAngleBetweenLine(second);
+	
+	if(angle < deviation)signal += "l" + to_string(abs(angle - deviation));
+	else if(angle > deviation)signal += "r" + to_string(abs(angle - deviation));
+	int dopangle = angle;
+	signal+=" f"+ to_string(second.GetLength());
+	//если углы равны то поворачиваться не надо
+
+	for(int i=2;i< route.size(); i++)
+	{
+		first = EquationOfLine(EquationOfLine(route[i-2], route[i-1]));
+		second = EquationOfLine(route[i-1], route[i]);
+		angle = first.CalculationOfAngleBetweenLine(second);
+
+		if (angle < dopangle)signal += " l" + to_string(angle);
+		else if (angle > dopangle)signal += " r" + to_string(angle);
+		signal += " f" + to_string(second.GetLength());
+		dopangle = angle;
+	}
+
+	angle = second.CalculationOfAngleBetweenLine(EquationOfLine(cv_Point(0, 0), cv_Point(0, 1)));
+	if (angle < dopangle)signal += " l" + to_string(abs(angle));
+	else if (angle > dopangle)signal += " r" + to_string(abs(angle));
+	signal += " s";
+
+
+	return signal;
 }
 
 
