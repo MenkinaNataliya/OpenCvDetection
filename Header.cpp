@@ -360,14 +360,39 @@ bool VerificationOfAdjacentDirections(cv_Point src, cv_Point dst,int dirMain, in
 	return false;
 }
 
+cv_Point DefinitionOfNearestLabel(cv_Point dst, vector<cv_Templates> templates)
+{
+	int minX = abs(templates[0].location->x- dst.x), minY = abs(templates[0].location->y - dst.y);
+	cv_Point label;
+	vector<cv_Templates> labelX;
+	for(auto templ : templates)
+	{
+		if (abs(dst.x - templ.location->x) <=  minX)
+		{
+			if(abs(dst.y - templ.location->y) <= minY)
+			{
+				minX = abs(templ.location->x - dst.x);
+				minY = abs(templ.location->y - dst.y);
+				label = *templ.location;
+			}
+		}
+	}
+	return label;
+	
+}
+
 vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Templates> templates)
 {
 	vector<cv_Point> map;
-	int direct = DirectionCheck(src,dst);/*определяем направление движения*/
+	
+	/*определяем ближайшую метку*/
+	cv_Point nearestLabel = DefinitionOfNearestLabel(dst, templates);
+
+	int direct = DirectionCheck(src, nearestLabel);/*определяем направление движения*/
 
 	float minDistanse=1000, dopDistanse=1000;
 	bool isPop = false;
-	int index = 0; int dir=0;//все равно перезапишется
+	int index = 0; int dir=0;//все равно   
 	/*начинаем строить маршрут*/
 	while (true){
 		for (int i = 0; i < templates.size(); i++){
@@ -382,7 +407,7 @@ vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Templates> 
 				dir = DirectionCheck(map[map.size() - 1], *templates[i].location);
 			}
 
-			if (VerificationOfAdjacentDirections(*templates[i].location, dst, direct, dir) && dist != 0){
+			if (VerificationOfAdjacentDirections(*templates[i].location, nearestLabel, direct, dir) && dist != 0){
 				if (dist < minDistanse) {
 					if (dist < dopDistanse) {
 						isPop = false;
@@ -410,8 +435,10 @@ vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Templates> 
 		map.push_back(*templates[index].location);
 		isPop = false; minDistanse = 1000000;
 		dopDistanse = 1000;
-		if (DirectionCheck(map[map.size() - 1], dst) == CURRENT) break;
+		if (DirectionCheck(map[map.size() - 1], nearestLabel) == CURRENT) break;
 	}
+//	if(nearestLabel.x!=dst.x && nearestLabel.y != dst.y)//если у нас место назначение не метка
+
 
 	vector<cv_Point> maptmp;
 	while(!map.empty())
@@ -426,6 +453,8 @@ vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Templates> 
 		map.push_back(maptmp[maptmp.size() - 1]);
 		maptmp.pop_back();
 	}
+	if (nearestLabel.x != dst.x && nearestLabel.y != dst.y)//если у нас место назначение не метка
+		map.push_back(dst);
 	return map;
 }
 
@@ -444,18 +473,18 @@ string GenerateSignal(vector<cv_Point> route, float deviation)
 	string signal;
 	//вычислили угол между ОУ и первой дистанцией
 	EquationOfLine first = EquationOfLine(cv_Point(0, 0), cv_Point(0, 1));
-	EquationOfLine second = EquationOfLine(route[0], route[1]);
-	int angle = first.CalculationOfAngleBetweenLine(second);
+	EquationOfLine second;//= EquationOfLine(route[0], route[1]);
+	/*int angle = first.CalculationOfAngleBetweenLine(second);
 	
-	if(angle < deviation)signal += "l" + to_string(abs(angle - deviation));
-	else if(angle > deviation)signal += "r" + to_string(abs(angle - deviation));
+	if(angle < deviation) signal += "l" + to_string(abs(angle - deviation));
+	else if(angle > deviation) signal += "r" + to_string(abs(angle - deviation));
 	int dopangle = angle;
-	signal+=" f"+ to_string(second.GetLength());
+	signal+=" f"+ to_string(second.GetLength());*/
 	//если углы равны то поворачиваться не надо
 
-	for(int i=2;i< route.size(); i++)
+	for(int i=1;i< route.size(); i++)
 	{
-		first = EquationOfLine(EquationOfLine(route[i-2], route[i-1]));
+		//first = EquationOfLine(EquationOfLine(route[i-2], route[i-1]));
 		second = EquationOfLine(route[i-1], route[i]);
 		angle = first.CalculationOfAngleBetweenLine(second);
 
@@ -463,6 +492,7 @@ string GenerateSignal(vector<cv_Point> route, float deviation)
 		else if (angle > dopangle)signal += " r" + to_string(angle);
 		signal += " f" + to_string(second.GetLength());
 		dopangle = angle;
+		first = EquationOfLine(EquationOfLine(route[i-1], route[i]));
 	}
 
 	angle = second.CalculationOfAngleBetweenLine(EquationOfLine(cv_Point(0, 0), cv_Point(0, 1)));

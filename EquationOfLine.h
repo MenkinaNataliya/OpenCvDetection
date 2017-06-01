@@ -12,7 +12,6 @@ public:
 	cv_Point pB;
 	EquationOfLine(cv_Point _a, cv_Point _b);
 	~EquationOfLine();
-	float CalculationOfAngleBetweenLine(EquationOfLine _b) const;
-	float GetLength() const;
+	
 };
 

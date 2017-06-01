@@ -308,9 +308,16 @@ string QRCode::Read()
 
 				for (int s = 0; s<4; s += 2)
 				{
-					result[r][s] = GettingByteValue(image.at<Vec3b>(yInfo - (6.5 + c)*sizeBlock, xInfo - (0.5 + p)* sizeBlock));
-					result[r][s + 1] = GettingByteValue(image.at<Vec3b>(yInfo - (6.5 + c)*sizeBlock, xInfo - (1.5 + p) * sizeBlock));
-					c++;
+					try
+					{
+						result[r][s] = GettingByteValue(image.at<Vec3b>(yInfo - (6.5 + c)*sizeBlock, xInfo - (0.5 + p)* sizeBlock));
+						result[r][s + 1] = GettingByteValue(image.at<Vec3b>(yInfo - (6.5 + c)*sizeBlock, xInfo - (1.5 + p) * sizeBlock));
+						c++;
+					}catch(Exception)
+					{
+						
+					}
+					
 				}
 				if (stepbottom) {
 					int one = result[r][0], two = result[r][1];
