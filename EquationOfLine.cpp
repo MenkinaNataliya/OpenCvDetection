@@ -15,6 +15,13 @@ EquationOfLine::EquationOfLine(cv_Point _a, cv_Point _b){
 EquationOfLine::~EquationOfLine()
 {
 }
+EquationOfLine::EquationOfLine()
+{
+	A = 0;
+	B =0;
+	C = 0;
+
+}
 
 float EquationOfLine::GetLength() const
 {

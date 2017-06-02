@@ -17,7 +17,7 @@ private:
 	void CalculateOrientation();
 	void ReadCountPackage(int onebit, int twobit, int threebit, int i, int j, int xInfo, int yInfo, int count, int numberPackages[]);
 	void GetHeadBytes(float y, float  x, int byte[]);
-	int GettingByteValue(Vec3b m);
+	int GettingByteValue(int m);
 	void GetSystemsBytes(float y, float  x, int byte[]);
 	void DrawTarget();
 	void Resize();

@@ -3,10 +3,13 @@
 #include "EquationOfLine.h"
 
 
-void SendErrorMessage(char *msg)
+void SendErrorMessage(string msg)
 {
+	ofstream fout("D:/Учеба/Сервисный робот/OpenCvDetection/data/cppstudio.txt", ios_base::app);
 	//отправка сообщения оператору о том что робот упал
-	cout << msg << endl;
+	
+	fout << msg << endl; // запись строки в файл
+	fout.close(); // закрываем файл
 }
 // Routines used in Main loops
 
@@ -107,28 +110,15 @@ void cv_getVertices(vector<vector<Point> > contours, int c_id, float slope, vect
 
 	if (slope > 5 || slope < -5)
 	{
-
 		for (int i = 0; i < contours[c_id].size(); i++)
 		{
 			pd1 = cv_lineEquation(C, A, contours[c_id][i]);	// Position of point w.r.t the diagonal AC 
 			pd2 = cv_lineEquation(B, D, contours[c_id][i]);	// Position of point w.r.t the diagonal BD
 
-			if ((pd1 >= 0.0) && (pd2 > 0.0))
-			{
-				cv_updateCorner(contours[c_id][i], W, dmax[1], M1);
-			}
-			else if ((pd1 > 0.0) && (pd2 <= 0.0))
-			{
-				cv_updateCorner(contours[c_id][i], X, dmax[2], M2);
-			}
-			else if ((pd1 <= 0.0) && (pd2 < 0.0))
-			{
-				cv_updateCorner(contours[c_id][i], Y, dmax[3], M3);
-			}
-			else if ((pd1 < 0.0) && (pd2 >= 0.0))
-			{
-				cv_updateCorner(contours[c_id][i], Z, dmax[0], M0);
-			}
+			if ((pd1 >= 0.0) && (pd2 > 0.0))		cv_updateCorner(contours[c_id][i], W, dmax[1], M1);
+			else if ((pd1 > 0.0) && (pd2 <= 0.0))	cv_updateCorner(contours[c_id][i], X, dmax[2], M2);
+			else if ((pd1 <= 0.0) && (pd2 < 0.0))	cv_updateCorner(contours[c_id][i], Y, dmax[3], M3);
+			else if ((pd1 < 0.0) && (pd2 >= 0.0))	cv_updateCorner(contours[c_id][i], Z, dmax[0], M0);
 			else
 				continue;
 		}
@@ -140,22 +130,10 @@ void cv_getVertices(vector<vector<Point> > contours, int c_id, float slope, vect
 
 		for (int i = 0; i < contours[c_id].size(); i++)
 		{
-			if ((contours[c_id][i].x < halfx) && (contours[c_id][i].y <= halfy))
-			{
-				cv_updateCorner(contours[c_id][i], C, dmax[2], M0);
-			}
-			else if ((contours[c_id][i].x >= halfx) && (contours[c_id][i].y < halfy))
-			{
-				cv_updateCorner(contours[c_id][i], D, dmax[3], M1);
-			}
-			else if ((contours[c_id][i].x > halfx) && (contours[c_id][i].y >= halfy))
-			{
-				cv_updateCorner(contours[c_id][i], A, dmax[0], M2);
-			}
-			else if ((contours[c_id][i].x <= halfx) && (contours[c_id][i].y > halfy))
-			{
-				cv_updateCorner(contours[c_id][i], B, dmax[1], M3);
-			}
+			if ((contours[c_id][i].x < halfx) && (contours[c_id][i].y <= halfy))	cv_updateCorner(contours[c_id][i], C, dmax[2], M0);
+			else if ((contours[c_id][i].x >= halfx) && (contours[c_id][i].y < halfy))	cv_updateCorner(contours[c_id][i], D, dmax[3], M1);
+			else if ((contours[c_id][i].x > halfx) && (contours[c_id][i].y >= halfy))	cv_updateCorner(contours[c_id][i], A, dmax[0], M2);
+			else if ((contours[c_id][i].x <= halfx) && (contours[c_id][i].y > halfy))	cv_updateCorner(contours[c_id][i], B, dmax[1], M3);
 		}
 	}
 
@@ -189,31 +167,19 @@ void cv_updateCornerOr(int orientation, vector<Point2f> IN, vector<Point2f> &OUT
 	Point2f M0, M1, M2, M3;
 	if (orientation == NORTH)
 	{
-		M0 = IN[0];
-		M1 = IN[1];
-		M2 = IN[2];
-		M3 = IN[3];
+		M0 = IN[0];	M1 = IN[1];	M2 = IN[2];	M3 = IN[3];
 	}
 	else if (orientation == EAST)
 	{
-		M0 = IN[1];
-		M1 = IN[2];
-		M2 = IN[3];
-		M3 = IN[0];
+		M0 = IN[1];	M1 = IN[2];	M2 = IN[3];	M3 = IN[0];
 	}
 	else if (orientation == SOUTH)
 	{
-		M0 = IN[2];
-		M1 = IN[3];
-		M2 = IN[0];
-		M3 = IN[1];
+		M0 = IN[2];	M1 = IN[3];	M2 = IN[0];	M3 = IN[1];
 	}
 	else if (orientation == WEST)
 	{
-		M0 = IN[3];
-		M1 = IN[0];
-		M2 = IN[1];
-		M3 = IN[2];
+		M0 = IN[3];	M1 = IN[0];	M2 = IN[1];	M3 = IN[2];
 	}
 
 	OUT.push_back(M0);
@@ -276,10 +242,9 @@ void cv_getContours(Mat image, vector<vector<Point> >& contours, vector<Vec4i> &
 	Mat edges(image.size(), CV_MAKETYPE(image.depth(), 1));			// To hold Grayscale Image
 
 
-	cvtColor(image, gray, CV_RGB2GRAY);		// Convert Image captured from Image Input to GrayScale	
+//	cvtColor(image, gray, CV_RGB2GRAY);		// Convert Image captured from Image Input to GrayScale	
 
-	Canny(gray, edges, 100, 200, 3);		// Apply Canny edge detection on the gray image
-
+	Canny(image, edges, 100, 200, 3);		// Apply Canny edge detection on the gray image
 
 	findContours(edges, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); // Find contours with hierarchy
 }
@@ -473,6 +438,8 @@ string GenerateSignal(vector<cv_Point> route, float deviation)
 	string signal;
 	//вычислили угол между ОУ и первой дистанцией
 	EquationOfLine first = EquationOfLine(cv_Point(0, 0), cv_Point(0, 1));
+	int angle;
+	int dopangle = deviation;
 	EquationOfLine second;//= EquationOfLine(route[0], route[1]);
 	/*int angle = first.CalculationOfAngleBetweenLine(second);
 	

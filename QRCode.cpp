@@ -10,7 +10,6 @@ QRCode::QRCode(Mat _image)
 	CalculateOrientation();
 	if(correctCode==true)	
 		DrawTarget();
-	//Resize();
 }
 QRCode::QRCode()
 {
@@ -40,46 +39,14 @@ QRCode::~QRCode() {}
 
 void QRCode::CalculateOrientation()
 {
-
-	int y, x;
-	for (y = 0; y < image.rows; y++)
-	{
-		uchar* ptrOrigin = (uchar*)(image.data + y * image.step);
-		
-		for (x = 0; x < image.cols; x++) {
-			int color;
-			if (ptrOrigin[3 * x]>120 && ptrOrigin[3 * x + 1]>120 && ptrOrigin[3 * x + 2]>120)color = 255;
-			else color = 0;
-			ptrOrigin[3 * x] = ptrOrigin[3 * x + 1] = ptrOrigin[3 * x + 2] = color;
-		}
+	try{
+		Contrast(image, 100);
+		//Mat gray(image.size(), CV_MAKETYPE(image.depth(), 1));
+		cvtColor(image, image, CV_RGB2GRAY);
+		threshold(image, image, 128, 255, THRESH_BINARY | THRESH_OTSU);
 	}
-	//	cv::imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/tmp1.jpg", image);
-	for (y = 0; y < image.rows; y++)
-	{
-		uchar* ptr = (uchar*)(image.data + y * image.step);
-		for (x = 0; x < image.cols; x++) {
-			if (ptr[3 * x]>120)//white
-			{
-				bool flag = false;
-				int color;
-				if (x == 0 || y == 0) flag = false;
-				else
-				{//если с трех сторон черные значит и она черная
-					uchar* ptr1 = (uchar*)(image.data + (y - 1) * image.step);
-					uchar* ptr2 = (uchar*)(image.data + (y + 1) * image.step);
-					int xx = x - 1, xxx = x + 1;
-					if (ptr[3 * xx] < 120 && ptr1[3 * x] < 120 && (ptr2[3 * x] < 120 || ptr[3 * xxx] < 120) ||
-						ptr2[3 * x] < 120 && ptr[3 * xxx] < 120 && (ptr[3 * xx] < 120 || ptr1[3 * x] < 120)) color = 0;
-					else color = 255;
-					flag = true;
-				}
-				if (flag) ptr[3 * x] = ptr[3 * x + 1] = ptr[3 * x + 2] = color;
-			}
-		}
-	}
-	
+	catch (Exception) { }
 
-	imshow("123", image);
 	cv_getContours(image, contours, hierarchy);//получили контур,
 
 	float AB, BC, CA, dist;
@@ -262,7 +229,7 @@ string QRCode::Read()
 	//Для числового режима количество закодировано в 10 следующих битах, а для 8 - битного режима в 8 битах
 	 if (mode[0] == 0 && mode[1] == 1 && mode[2] == 0 && mode[3] == 0) {//8 - битный(байтный)
 
-		char buffer[20];//разобраться с возвращаемымм значением
+		char buffer[250];//разобраться с возвращаемымм значением
 						//считываем первые 8 бит что бы узнать сколько пакетов информации
 		int numberPackages[8];
 		ReadCountPackage(info[2], info[3], info[4], i, j, xInfo, yInfo, 8, numberPackages);
@@ -310,13 +277,14 @@ string QRCode::Read()
 				{
 					try
 					{
-						result[r][s] = GettingByteValue(image.at<Vec3b>(yInfo - (6.5 + c)*sizeBlock, xInfo - (0.5 + p)* sizeBlock));
-						result[r][s + 1] = GettingByteValue(image.at<Vec3b>(yInfo - (6.5 + c)*sizeBlock, xInfo - (1.5 + p) * sizeBlock));
+						Scalar colour;
+						colour = image.at<uchar>(Point(xInfo - (0.5 + p)* sizeBlock, yInfo - (6.5 + c)*sizeBlock));
+						result[r][s] = GettingByteValue(colour.val[0]);
+
+						colour = image.at<uchar>(Point(xInfo - (1.5 + p)* sizeBlock, yInfo - (6.5 + c)*sizeBlock));
+						result[r][s + 1] = GettingByteValue(colour.val[0]);
 						c++;
-					}catch(Exception)
-					{
-						
-					}
+					}catch(Exception)	{	}
 					
 				}
 				if (stepbottom) {
@@ -343,26 +311,21 @@ string QRCode::Read()
 			}
 			buffer[w] = res;
 		}
-		buffer[w] = 0;
+		try
+		{
+			buffer[w] = 0;
+		}catch(Exception){}
+	
 
-		std::printf("result is = %s\n", buffer);
+		SendErrorMessage("result is = "+ std::string(buffer));
 		return std::string(buffer);
 
 		//return buffer;
 	}
 	else {
-		if(!doubleRead)
-		{
-			doubleRead = true;
-			CalculateOrientation();
-			Read();
-		}else
-		{
-			doubleRead = false;
-			SendErrorMessage("QR-Code is incorrect");
-		}
 		
-		
+			//SendErrorMessage("QR-Code is incorrect");
+
 	}
 	return "";
 	/****************************************************************************************************/

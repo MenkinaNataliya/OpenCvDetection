@@ -74,61 +74,74 @@ int main()
 
 	Mat frame;
 	VideoCapture cap;
-	int camOpen = cap.open(0);
-	if (!cap.isOpened()) {
-
-		return -1;
-	}
+	cap.open(0);
+	if (!cap.isOpened()) return -1;
+	
 	namedWindow("Video", CV_WINDOW_AUTOSIZE);
 	
-	//cv_Point* destination = new cv_Point(9,8);
-	//DefaneTemplate();
-		//построение маршрута
-	//vector<cv_Point> route = RoutePlanning(*currentLocation, *destination, templates);
-	//	MoveToGivenPoint(*currentLocation, route);
-	
-	//IplImage* templMain = cvLoadImage(route[0].filename);
-	//OtherFunction(currentLocation, *label.location, i);
-	int count = 0;
+	int count = 0,  countFrame = 0, countAnalisFrame = 0, countQr = 0, countCorrectQR = 0, countIncorrectQR = 0;
 	while (true) {
 		cap >> frame;
-		if(count ==10)
+		countFrame++;
+		if(count == 5)
 		{
+			countAnalisFrame++;
 			QRCode code = FindQrCode(frame);
 			
 			if (!code.Empty()) {
+				countQr++;
 				if (code.GetOrientation() != NORTH) {
 					SendErrorMessage("Qr-code is bad. The robot could fall");
 					count = -1;
 				}
 				else {
-					std::string message(code.Read());//после считывания сообщения необходимо проверить корректность данных
-					std::tr1::regex rx("x: [0-9]{1,3}; y: [0-9]{1,3}");
-					std::tr1::regex rx1("X: [0-9]{1,3}\nY: [0-9]{1,3}");
+					string message(code.Read());//после считывания сообщения необходимо проверить корректность данных
+					//if(!CheckMessageMatch( message ) && !CheckMessageSearch(message))countIncorrectQR++;
+					//else {
+					//	string messagetwo(code.ReRead());
+					//	if (!CheckMessageMatch(message) && !CheckMessageSearch(message))countIncorrectQR++;
+					//	else {
+					//		count = -1;
+					//		countCorrectQR++;
+					//	}
+					//}
+				//	regex simple("x: * y: *");
+					regex rx("x: [0-9]{1,3}; y: [0-9]{1,3}");
+					regex rx1("X: [0-9]{1,3}\nY: [0-9]{1,3}");
 					bool findMessage = regex_match(message.begin(), message.end(), rx);
 					bool findMessage1 = regex_match(message.begin(), message.end(), rx1);
 					if(!findMessage && !findMessage1)//если сообщение не подходит, то либо неверно считалось и нужно попробовать еще, либо это не наша метка
 					{//нужно попробовать перечитать код
-						std::string messagetwo(code.ReRead());
+						string messagetwo(code.ReRead());
 						findMessage = regex_match(messagetwo.begin(), messagetwo.end(), rx);
 						findMessage1 = regex_match(messagetwo.begin(), messagetwo.end(), rx1);
 						if(!findMessage && !findMessage1)
-						{//если это не помогло то проверяем следующий кадр
 							count--;
-						}
+						countIncorrectQR++;
+
 					}
 					else
 					{//если подходит хотя бы под одну регулярку то можно считать что выражение верное и корректировать свое местоположение и маршрут
 						count = -1;
+						countCorrectQR++;
+					//	SendErrorMessage( "qrcode correct\n" );
 					}
 				}
 			}
 			else count = -1;
 		}
 		count++;
-		imshow("Video", frame);
+		cv::imshow("Video", frame);
 		int c = cvWaitKey(50);
 		if ((char)c == 27)			break;
+		//if(countFrame == 500)
+		//{
+		//	//cvWaitKey(200);
+		//	countFrame = countAnalisFrame = countQr = countCorrectQR = 	count =	countIncorrectQR = 0;
+		//	ofstream fout("D:/Учеба/Сервисный робот/OpenCvDetection/data/cppstudio.txt", ios_base::trunc);
+		//
+		//	fout.close(); // закрываем файл
+		//}
 	}
 
     return 0;

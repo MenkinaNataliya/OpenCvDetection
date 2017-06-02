@@ -2,28 +2,43 @@
 #include "QRCode.h"
 #include "CountMask.h"
 
-int QRCode::GettingByteValue(Vec3b m)
+int QRCode::GettingByteValue(int m)
 {
-	if (m[0] >= 250 && m[1] >= 250 && m[2] >= 250) return 0;
-	return 1;
+	if (m == 255) return 0;
+	else return 1;
 }
 
 void QRCode::GetSystemsBytes(float y, float  x, int byte[]) {
-
-	byte[0] = GettingByteValue(image.at<Vec3b>(y + ceil(sizeBlock / 2), x + 0.5* sizeBlock));
-	byte[1] = GettingByteValue(image.at<Vec3b>(y + ceil(sizeBlock / 2), x + 1.5* sizeBlock));
-	byte[2] = GettingByteValue(image.at<Vec3b>(y + ceil(sizeBlock / 2), x + 2.5* sizeBlock));
-	byte[3] = GettingByteValue(image.at<Vec3b>(y + ceil(sizeBlock / 2), x + 3.5* sizeBlock));
-	byte[4] = GettingByteValue(image.at<Vec3b>(y + ceil(sizeBlock / 2), x + 4.5* sizeBlock));
+	try
+	{
+		Scalar colour;
+		for(int u =0 ; u<5; u++)
+		{
+			colour = image.at<uchar>(Point(x + (u+0.5)* sizeBlock, y + ceil(sizeBlock / 2)));
+			byte[u] = GettingByteValue(colour.val[0]);
+		}
+	}
+	catch (Exception){	}
 }
 
 
 void QRCode::GetHeadBytes(float y, float  x, int byte[]) {
+	try
+	{
+		Scalar colour;
+		colour = image.at<uchar>(Point(x - 0.5* sizeBlock, y - ceil(sizeBlock / 2)));
+		byte[0] = GettingByteValue(colour.val[0]);
 
-	byte[0] = GettingByteValue(image.at<Vec3b>(y - ceil(sizeBlock / 2), x - 0.5* sizeBlock));
-	byte[1] = GettingByteValue(image.at<Vec3b>(y - ceil(sizeBlock / 2), x - 1.5 * sizeBlock));
-	byte[2] = GettingByteValue(image.at<Vec3b>(y - 1.5 * sizeBlock, x - 0.5* sizeBlock));
-	byte[3] = GettingByteValue(image.at<Vec3b>(y - 1.5 * sizeBlock, x - 1.5 * sizeBlock));
+		colour = image.at<uchar>(Point(x - 1.5 * sizeBlock, y - ceil(sizeBlock / 2)));
+		byte[1] = GettingByteValue(colour.val[0]);
+
+		colour = image.at<uchar>(Point(x - 0.5 * sizeBlock, y - 1.5 * sizeBlock));
+		byte[2] = GettingByteValue(colour.val[0]);
+
+		colour = image.at<uchar>(Point(x - 1.5 * sizeBlock, y - 1.5 * sizeBlock));
+		byte[3] = GettingByteValue(colour.val[0]);
+	}
+	catch(Exception){	}
 }
 
 
@@ -32,14 +47,24 @@ void QRCode::ReadCountPackage(int onebit, int twobit, int threebit, int i, int j
 	int c = 0;
 	int maskcount[8];
 	GetMaskByte(onebit, twobit, threebit, i, j, maskcount);
-	for (int w = 0; w< count; w += 2)//читаем биты и сразу применяем маску
+	Scalar colour;
+	try
 	{
-		numberPackages[w] = GettingByteValue(image.at<Vec3b>(yInfo - (2.5 + c)*sizeBlock, xInfo - 0.5* sizeBlock));
-		numberPackages[w] = numberPackages[w] == maskcount[w] ? 0 : 1;
-		numberPackages[w + 1] = GettingByteValue(image.at<Vec3b>(yInfo - (2.5 + c)*sizeBlock, xInfo - 1.5* sizeBlock));
-		numberPackages[w + 1] = numberPackages[w + 1] == maskcount[w + 1] ? 0 : 1;
-		c++;
+		for (int w = 0; w< count; w += 2)//читаем биты и сразу применяем маску
+		{
+			
+			colour = image.at<uchar>(Point(xInfo - 0.5* sizeBlock, yInfo - (2.5 + c)*sizeBlock));
+			numberPackages[w] = GettingByteValue(colour.val[0]);
+			numberPackages[w] = numberPackages[w] == maskcount[w] ? 0 : 1;
+
+			colour = image.at<uchar>(Point(xInfo - 1.5* sizeBlock, yInfo - (2.5 + c)*sizeBlock));
+			numberPackages[w + 1] = GettingByteValue(colour.val[0]);
+			numberPackages[w + 1] = numberPackages[w + 1] == maskcount[w + 1] ? 0 : 1;
+			c++;
+		}
 	}
+	catch(Exception){}
+	
 }
 
 

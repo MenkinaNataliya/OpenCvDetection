@@ -54,4 +54,9 @@ void SendSignal(string signal);
 string GenerateSignal(vector<cv_Point> route, float deviation);
 //void cv_ReadQrCode(Mat image, vector<Point2f> L, vector<Point2f> M, vector<Point2f> O);
 
-void SendErrorMessage(char *msg);
+void SendErrorMessage(string msg);
+void Contrast(Mat m_imgEdit, int step);
+
+Mat Clarity(Mat *m_imgEdit, int step);
+bool CheckMessageMatch(string ms);
+bool CheckMessageSearch(string ms);
