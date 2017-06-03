@@ -16,7 +16,7 @@ cv_Point::~cv_Point()
 {
 }
 
-double cv_Point::DistanceCalculation(cv_Point dst) const
+float cv_Point::DistanceCalculation(cv_Point dst) const
 {
 	return sqrt(pow((dst.x - x), 2) + pow((dst.y - y), 2));
 }

@@ -1,3 +1,5 @@
-﻿  OpenCvDetection.cpp
+﻿  Robot.cpp
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\robot.cpp(20): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\robot.cpp(87): warning C4244: =: преобразование "float" в "int", возможна потеря данных
   OpenCvDetection.vcxproj -> D:\Учеба\Сервисный робот\OpenCvDetection\x64\Debug\OpenCvDetection.exe
   OpenCvDetection.vcxproj -> D:\Учеба\Сервисный робот\OpenCvDetection\x64\Debug\OpenCvDetection.pdb (Full PDB)

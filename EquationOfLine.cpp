@@ -31,6 +31,6 @@ float EquationOfLine::GetLength() const
 float EquationOfLine::CalculationOfAngleBetweenLine(EquationOfLine _b) const
 {
 	float cosinus = (A * _b.A + B*_b.B) / (sqrt(A *A + B*B) * sqrt(_b.A *_b.A + _b.B *_b.B));
-
+	if (cosinus != cosinus) return 0;
 	return acos(cosinus)* 180.0 / 3.14159265;
 }

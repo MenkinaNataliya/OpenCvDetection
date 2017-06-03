@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Header.h"
 #include "QRCode.h"
+#include "DefineTarget.h"
 
 QRCode FindQrCode(Mat image)
 {
@@ -19,9 +20,8 @@ QRCode FindQrCode(Mat image)
 
 	cvtColor(image, gray, CV_RGB2GRAY);		// Convert Image captured from Image Input to GrayScale	
 
-	cv::Canny(gray, edges, 100, 200, 3);		// Apply Canny edge detection on the gray image
-	cv::imshow("canny", edges);
-
+	//cv::Canny(gray, edges, 100, 200, 3);		// Apply Canny edge detection on the gray image
+	//cv::imshow("canny", edges);
 
 	cv::findContours(edges, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); // Find contours with hierarchy
 
@@ -58,10 +58,6 @@ QRCode FindQrCode(Mat image)
 		}
 	}
 	drawContours(image, contours, -1, Scalar(255, 200, 0), 2, 8, hierarchy, 0);
-	/*drawContours(image, contours, right, Scalar(0, 0, 255), 2, 8, hierarchy, 0);
-	drawContours(image, contours, bottom, Scalar(255, 0, 100), 2, 8, hierarchy, 0);*/
-	//imshow("detect conturs", image);
-
 
 	if (mark >= 2 && (A>0 && A<mc.size())&& (B>0 && B<mc.size()) && (C>0 && C<mc.size()) ) {
 		AB = cv_distance(mc[A], mc[B]);
@@ -132,12 +128,7 @@ QRCode FindQrCode(Mat image)
 					
 			QRCode qrcode = QRCode(img3);
 			return qrcode;
-			/*imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/image03.jpg", img3);
 
-			imshow("Image", image);
-			imshow("QR code", qr_thres);
-			return true;
-*/
 		}
 	}
 

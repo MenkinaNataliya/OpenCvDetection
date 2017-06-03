@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "QRCode.h"
 #include "CountMask.h"
+#include "DefineTarget.h"
 
 QRCode::QRCode(Mat _image)
 {
@@ -50,7 +51,7 @@ void QRCode::CalculateOrientation()
 	cv_getContours(image, contours, hierarchy);//получили контур,
 
 	float AB, BC, CA, dist;
-	int mark = 0, A, B, C, median1, median2, outlier, align, orientation;	// Reset all detected marker count for this frame
+	int mark = 0, A, B, C, median1, median2, outlier, align;	// Reset all detected marker count for this frame
 																			// Get Moments for all Contours and the mass centers
 	vector<Moments> mu(contours.size());
 	vector<Point2f> mc(contours.size());

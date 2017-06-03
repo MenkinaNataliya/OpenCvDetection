@@ -23,6 +23,7 @@
 #include <vector>
 #include "cv_Templates.h"
 
+
 //#include "QRCode.h"
 
 using namespace std;
@@ -31,32 +32,17 @@ using namespace cv;
 
 extern
 
-void DefaneTemplate();
 
-//QRCode FindQrCode(Mat image);
-
-enum Orientation { NORTH, WEST, EAST, SOUTH };
-extern
+//extern
 vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Templates> templates);
+enum Orientation { NORTH, WEST, EAST, SOUTH };
 
-
-float cv_distance(Point2f P, Point2f Q);					// Get Distance between two points
-float cv_lineEquation(Point2f L, Point2f M, Point2f J);		// Perpendicular Distance of a Point J from line formed by Points L and M; Solution to equation of the line Val = ax+by+c 
-float cv_lineSlope(Point2f L, Point2f M, int& alignement);	// Slope of a line by two Points L and M on it; Slope of line, S = (x1 -x2) / (y1- y2)
-void cv_getVertices(vector<vector<Point> > contours, int c_id, float slope, vector<Point2f>& X);
-void cv_updateCorner(Point2f P, Point2f ref, float& baseline, Point2f& corner);
-void cv_updateCornerOr(int orientation, vector<Point2f> IN, vector<Point2f> &OUT);
-bool getIntersectionPoint(Point2f a1, Point2f a2, Point2f b1, Point2f b2, Point2f& intersection);
-float cross(Point2f v1, Point2f v2);
-int cv_CalculationOfDimensionsSquare(vector<Point2f> top, vector<Point2f> right, vector<Point2f> bottom);
-void cv_getContours(Mat image, vector<vector<Point> >& contours, vector<Vec4i>& hierarchy);
-void SendSignal(string signal);
-string GenerateSignal(vector<cv_Point> route, float deviation);
-//void cv_ReadQrCode(Mat image, vector<Point2f> L, vector<Point2f> M, vector<Point2f> O);
-
+				
 void SendErrorMessage(string msg);
 void Contrast(Mat m_imgEdit, int step);
 
-Mat Clarity(Mat *m_imgEdit, int step);
-bool CheckMessageMatch(string ms);
-bool CheckMessageSearch(string ms);
+
+void SendSignal(string signal);
+float SendSignals(cv_Point pointOne, cv_Point pointTwo, int deviation);
+float GetAngleFromMainAxis(cv_Point pointOne, cv_Point pointTwo, int deviation);
+string GenerateSignals(cv_Point pointOne, cv_Point pointTwo, int deviation);

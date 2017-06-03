@@ -151,7 +151,9 @@
     <ClInclude Include="CountMask.h" />
     <ClInclude Include="cv_Point.h" />
     <ClInclude Include="cv_Templates.h" />
+    <ClInclude Include="DefineTarget.h" />
     <ClInclude Include="EquationOfLine.h" />
+    <ClInclude Include="FindQr.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="QRCode.h" />
     <ClInclude Include="Robot.h" />
@@ -162,8 +164,10 @@
     <ClCompile Include="CountMask.cpp" />
     <ClCompile Include="cv_Point.cpp" />
     <ClCompile Include="cv_Templates.cpp" />
+    <ClCompile Include="DefineTarget.cpp" />
     <ClCompile Include="DetectQRCode.cpp" />
     <ClCompile Include="EquationOfLine.cpp" />
+    <ClCompile Include="FindQr.cpp" />
     <ClCompile Include="GettingByte.cpp" />
     <ClCompile Include="Header.cpp" />
     <ClCompile Include="OpenCvDetection.cpp" />
@@ -175,7 +179,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="WorkingWithRegularExpression.cpp" />
     <ClCompile Include="WorkWithImage.cpp" />
   </ItemGroup>
   <ItemGroup>

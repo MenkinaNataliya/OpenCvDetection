@@ -43,33 +43,3 @@ void Contrast(Mat m_imgEdit, int step)
 		
 	}
 }
-
-Mat Clarity(Mat *m_imgEdit, int step)
-{
-	try
-	{
-		if (step < 0)
-		{
-			cv::blur(*m_imgEdit, *m_imgEdit, cv::Size(-step * 2 + 1, -step * 2 + 1));
-		}
-		else
-		{
-			Mat dst = m_imgEdit->clone();
-			float matr[9]{
-				-0.0375 - 0.05*step, -0.0375 - 0.05*step, -0.0375 - 0.05*step,
-				-0.0375 - 0.05*step, 1.3 + 0.4*step, -0.0375 - 0.05*step,
-				-0.0375 - 0.05*step, -0.0375 - 0.05*step, -0.0375 - 0.05*step
-			};
-			Mat kernel_matrix = Mat(3, 3, CV_32FC1, &matr);
-			cv::filter2D(*m_imgEdit, dst, 32, kernel_matrix);
-			//return m_imgEdit;
-			//m_imgEdit = make_shared<Mat>(dst);
-		}
-		//cv::imwrite("D:/Учеба/Сервисный робот/OpenCvDetection/data/tmp1.jpg", *m_imgEdit);
-		return *m_imgEdit;
-	}
-	catch (Exception ex)
-	{
-
-	}
-}
