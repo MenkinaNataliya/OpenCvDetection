@@ -150,7 +150,7 @@
   <ItemGroup>
     <ClInclude Include="CountMask.h" />
     <ClInclude Include="cv_Point.h" />
-    <ClInclude Include="cv_Templates.h" />
+    <ClInclude Include="cv_Label.h" />
     <ClInclude Include="DefineTarget.h" />
     <ClInclude Include="EquationOfLine.h" />
     <ClInclude Include="FindQr.h" />
@@ -163,7 +163,7 @@
   <ItemGroup>
     <ClCompile Include="CountMask.cpp" />
     <ClCompile Include="cv_Point.cpp" />
-    <ClCompile Include="cv_Templates.cpp" />
+    <ClCompile Include="cv_Label.cpp" />
     <ClCompile Include="DefineTarget.cpp" />
     <ClCompile Include="DetectQRCode.cpp" />
     <ClCompile Include="EquationOfLine.cpp" />

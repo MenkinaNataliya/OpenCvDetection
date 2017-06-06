@@ -20,9 +20,10 @@ void GoTo()
 	cin >> x;
 	cin >> y;
 
-	vector<cv_Point> route = RoutePlanning(robot.currentLocation, cv_Point(x, y), robot.templates);//составили маршрут
+	robot.Routeing(cv_Point(x, y));
+	//vector<cv_Point> route = RoutePlanning(robot.currentLocation, cv_Point(x, y), robot.labels);//составили маршрут
 		/*СЛЕДУЕМ МАРШРУТУ*/
-	robot.FollowRoute(route);
+	robot.FollowRoute();
 	//SendSignal(GenerateSignal(route, robot.deviationFromMainAxis));
 }
 

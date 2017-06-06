@@ -1,23 +1,30 @@
 #pragma once
 #include "Header.h"
+#include "cv_Label.h"
+
 class Robot
 {
 	void DefineTemplate();
+	bool dstIsLabel;
+	vector<cv_Point> route;
 public:
 
 	cv_Point currentLocation;
-	vector<cv_Templates> templates;
+	vector<cv_Label> labels;
+
 
 	//отсчет отклонения считается от ОУ (т.е. если знаечение равно 0, значит робот смотрит по ОУ), 
 	//поворот осушествляется в правую сторону.
 	//значения от 0до 90 робот смотрит в 1 четверти плоскости
-	//91-180 - 4 четверть
+	//91-180 - 4 четверть  
 	//181 - 270 - 3 четверть
 	//271-359 - 2 четверть
 	int deviationFromMainAxis;
-	void FollowRoute(vector<cv_Point> route);
+	void FollowRoute(/*vector<cv_Point> route*/);
 	bool PositionYourself();
 	void PrintTags();
+	void Routeing(cv_Point distanation);
+
 	Robot(cv_Point location);
 	Robot(cv_Point location, float deviation);
 	~Robot();

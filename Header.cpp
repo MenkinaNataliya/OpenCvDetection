@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Header.h"
 #include "EquationOfLine.h"
+#include "cv_Label.h"
 
 
 void SendErrorMessage(string msg)
@@ -18,7 +19,6 @@ void SendErrorMessage(string msg)
 
 
 
-enum Direction { RIGHT_BOTTOM, LEFT_BOTTOM, RIGHT_TOP ,LEFT_TOP, RIGHT, LEFT, TOP, BOTTOM, CURRENT};
 
 Direction DirectionCheck(cv_Point src, cv_Point dst)
 {
@@ -94,11 +94,11 @@ bool VerificationOfAdjacentDirections(cv_Point src, cv_Point dst,int dirMain, in
 	return false;
 }
 
-cv_Point DefinitionOfNearestLabel(cv_Point dst, vector<cv_Templates> templates)
+cv_Point DefinitionOfNearestLabel(cv_Point dst, vector<cv_Label> templates)
 {
 	int minX = abs(templates[0].location.x- dst.x), minY = abs(templates[0].location.y - dst.y);
 	cv_Point label;
-	vector<cv_Templates> labelX;
+	vector<cv_Label> labelX;
 	for(auto templ : templates)
 	{
 		if (abs(dst.x - templ.location.x) <=  minX)
@@ -114,6 +114,8 @@ cv_Point DefinitionOfNearestLabel(cv_Point dst, vector<cv_Templates> templates)
 	return label;
 	
 }
+
+
 float GetAngleFromMainAxis(cv_Point pointOne, cv_Point pointTwo, int deviation)
 {
 	EquationOfLine first = EquationOfLine(pointOne, pointTwo);
@@ -154,82 +156,82 @@ void SendSignal(string signal)
 	fout.close(); // закрываем файл
 }
 
-vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Templates> templates)
-{
-	vector<cv_Point> map;
-	
-	/*определяем ближайшую метку*/
-	cv_Point nearestLabel = DefinitionOfNearestLabel(dst, templates);
-
-	int direct = DirectionCheck(src, nearestLabel);/*определяем направление движения*/
-
-	float minDistanse=1000, dopDistanse=1000;
-	bool isPop = false;
-	int index = 0; int dir=0;//все равно   
-	/*начинаем строить маршрут*/
-	while (true){
-		for (int i = 0; i < templates.size(); i++){
-			float dist;
-
-			if (map.empty()) {
-				dist = src.DistanceCalculation(templates[i].location);
-				dir = DirectionCheck(src, templates[i].location);
-			}
-			else {
-				dist = (map[map.size() - 1]).DistanceCalculation(templates[i].location);
-				dir = DirectionCheck(map[map.size() - 1], templates[i].location);
-			}
-
-			if (VerificationOfAdjacentDirections(templates[i].location, nearestLabel, direct, dir) && dist != 0){
-				if (dist < minDistanse) {
-					if (dist < dopDistanse) {
-						isPop = false;
-
-						if (!map.empty() && map.size() != 1) {
-							float twoPointDistance = map[map.size() - 2].DistanceCalculation(templates[i].location);
-							float threePointDistance = map[map.size() - 1].DistanceCalculation(map[map.size() - 2]) + dist;
-							if (threePointDistance - twoPointDistance <= 1 
-								&& abs(map[map.size() - 1].x - (templates[i].location).x) <=2
-								&& abs(map[map.size() - 1].y - (templates[i].location).y) <= 2){
-
-								isPop = true;
-								minDistanse = twoPointDistance; 
-								dopDistanse = dist;
-							}
-							else minDistanse = dist;
-						}
-						else	minDistanse = dist;
-						index = i;
-					}
-				}
-			}
-		}
-		if (isPop) map.pop_back();
-		map.push_back(templates[index].location);
-		isPop = false; minDistanse = 1000000;
-		dopDistanse = 1000;
-		if (DirectionCheck(map[map.size() - 1], nearestLabel) == CURRENT) break;
-	}
-//	if(nearestLabel.x!=dst.x && nearestLabel.y != dst.y)//если у нас место назначение не метка
-
-
-	vector<cv_Point> maptmp;
-	while(!map.empty())
-	{
-		maptmp.push_back(map[map.size()-1]);
-		map.pop_back();
-	}
-
-	map.push_back(src);
-	while (!maptmp.empty())
-	{
-		map.push_back(maptmp[maptmp.size() - 1]);
-		maptmp.pop_back();
-	}
-	if (nearestLabel.x != dst.x && nearestLabel.y != dst.y)//если у нас место назначение не метка
-		map.push_back(dst);
-	return map;
-}
+//vector<cv_Point> RoutePlanning(cv_Point src, cv_Point dst, vector<cv_Label> templates)
+//{
+//	vector<cv_Point> map;
+//	
+//	/*определяем ближайшую метку*/
+//	cv_Point nearestLabel = DefinitionOfNearestLabel(dst, templates);
+//
+//	int direct = DirectionCheck(src, nearestLabel);/*определяем направление движения*/
+//
+//	float minDistanse=1000, dopDistanse=1000;
+//	bool isPop = false;
+//	int index = 0; int dir=0;//все равно   
+//	/*начинаем строить маршрут*/
+//	while (true){
+//		for (int i = 0; i < templates.size(); i++){
+//			float dist;
+//
+//			if (map.empty()) {
+//				dist = src.DistanceCalculation(templates[i].location);
+//				dir = DirectionCheck(src, templates[i].location);
+//			}
+//			else {
+//				dist = (map[map.size() - 1]).DistanceCalculation(templates[i].location);
+//				dir = DirectionCheck(map[map.size() - 1], templates[i].location);
+//			}
+//
+//			if (VerificationOfAdjacentDirections(templates[i].location, nearestLabel, direct, dir) && dist != 0){
+//				if (dist < minDistanse) {
+//					if (dist < dopDistanse) {
+//						isPop = false;
+//
+//						if (!map.empty() && map.size() != 1) {
+//							float twoPointDistance = map[map.size() - 2].DistanceCalculation(templates[i].location);
+//							float threePointDistance = map[map.size() - 1].DistanceCalculation(map[map.size() - 2]) + dist;
+//							if (threePointDistance - twoPointDistance <= 1 
+//								&& abs(map[map.size() - 1].x - (templates[i].location).x) <=2
+//								&& abs(map[map.size() - 1].y - (templates[i].location).y) <= 2){
+//
+//								isPop = true;
+//								minDistanse = twoPointDistance; 
+//								dopDistanse = dist;
+//							}
+//							else minDistanse = dist;
+//						}
+//						else	minDistanse = dist;
+//						index = i;
+//					}
+//				}
+//			}
+//		}
+//		if (isPop) map.pop_back();
+//		map.push_back(templates[index].location);
+//		isPop = false; minDistanse = 1000000;
+//		dopDistanse = 1000;
+//		if (DirectionCheck(map[map.size() - 1], nearestLabel) == CURRENT) break;
+//	}
+////	if(nearestLabel.x!=dst.x && nearestLabel.y != dst.y)//если у нас место назначение не метка
+//
+//
+//	vector<cv_Point> maptmp;
+//	while(!map.empty())
+//	{
+//		maptmp.push_back(map[map.size()-1]);
+//		map.pop_back();
+//	}
+//
+//	map.push_back(src);
+//	while (!maptmp.empty())
+//	{
+//		map.push_back(maptmp[maptmp.size() - 1]);
+//		maptmp.pop_back();
+//	}
+//	if (nearestLabel.x != dst.x && nearestLabel.y != dst.y)//если у нас место назначение не метка
+//		map.push_back(dst);
+//	return map;
+//}
 
 //Например, прямо 5 метров: f5(f - forward)
 //Назад, 2 метра : b2(b - backward)

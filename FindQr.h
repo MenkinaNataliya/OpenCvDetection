@@ -5,4 +5,4 @@
 
 cv_Point FindAnyCode();
 bool FindCode(cv_Point mark);
-QRCode FindQrCode(Mat image);
+QRCode DetectQrCode(Mat image);

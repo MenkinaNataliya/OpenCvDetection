@@ -3,30 +3,21 @@
 #include "QRCode.h"
 #include "DefineTarget.h"
 
-QRCode FindQrCode(Mat image)
+QRCode DetectQrCode(Mat image)
 {
-	// Creation of Intermediate 'Image' Objects required later
 	Mat gray(image.size(), CV_MAKETYPE(image.depth(), 1));			// To hold Grayscale Image
 	Mat edges(image.size(), CV_MAKETYPE(image.depth(), 1));			// To hold Grayscale Image
 	Mat qr, qr_raw, qr_gray;
-
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
-
 	int  top, right, bottom, median1, median2, outlier;
 	float AB, BC, CA, dist, slope;
 	int mark, A = -1, B = -1, C = -1;
-
-
 	cvtColor(image, gray, CV_RGB2GRAY);		// Convert Image captured from Image Input to GrayScale	
-
-	//cv::Canny(gray, edges, 100, 200, 3);		// Apply Canny edge detection on the gray image
-	//cv::imshow("canny", edges);
-
-	cv::findContours(edges, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); // Find contours with hierarchy
-
+	//imshow("123", gray);
+	//cv::findContours(gray, contours, hierarchy, RETR_TREE, CHAIN_APPROX_TC89_KCOS); // Find contours with hierarchy
+	cv_getContours(gray, contours, hierarchy);
 	mark = 0;								// Reset all detected marker count for this frame
-
 											// Get Moments for all Contours and the mass centers
 	vector<Moments> mu(contours.size());
 	vector<Point2f> mc(contours.size());
@@ -57,6 +48,7 @@ QRCode FindQrCode(Mat image)
 			mark = mark + 1;
 		}
 	}
+
 	drawContours(image, contours, -1, Scalar(255, 200, 0), 2, 8, hierarchy, 0);
 
 	if (mark >= 2 && (A>0 && A<mc.size())&& (B>0 && B<mc.size()) && (C>0 && C<mc.size()) ) {
@@ -79,37 +71,35 @@ QRCode FindQrCode(Mat image)
 		else if (slope < 0 && dist > 0) { right = median1; bottom = median2; orientation = SOUTH; }
 		else if (slope > 0 && dist > 0) { bottom = median1; right = median2; orientation = WEST; }
 
-		if (top < contours.size() && right < contours.size() && bottom < contours.size() && contourArea(contours[top]) > 10 && contourArea(contours[right]) > 10 && contourArea(contours[bottom]) > 10)
+		if (top < contours.size() && right < contours.size() && bottom < contours.size() && 
+			contourArea(contours[top]) > 10 && contourArea(contours[right]) > 10 && contourArea(contours[bottom]) > 10)
 		{
-
-			vector<Point2f> L, M, O, tempL, tempM, tempO;
+			vector<Point2f> L, M, O, tempL, tempM, tempO, src, dst;
 			Point2f N;
-
-			vector<Point2f> src, dst;
 			Mat warp_matrix;
+			
 
 			cv_getVertices(contours, top, slope, tempL);
 			cv_getVertices(contours, right, slope, tempM);
 			cv_getVertices(contours, bottom, slope, tempO);
 
-			cv_updateCornerOr(orientation, tempL, L); 			// Re-arrange marker corners w.r.t orientation of the QR code
-			cv_updateCornerOr(orientation, tempM, M); 			// Re-arrange marker corners w.r.t orientation of the QR code
-			cv_updateCornerOr(orientation, tempO, O); 			// Re-arrange marker corners w.r.t orientation of the QR code
-
-			int iflag = getIntersectionPoint(M[1], M[2], O[3], O[2], N);
-
-			
+			cv_updateCornerOr(orientation, tempL, L); 			
+			cv_updateCornerOr(orientation, tempM, M); 			
+			cv_updateCornerOr(orientation, tempO, O); 			
+			getIntersectionPoint(M[1], M[2], O[3], O[2], N);
 			src.push_back(L[0]);
 			src.push_back(M[1]);
 			src.push_back(N);
 			src.push_back(O[3]);
-
+			//circle(image, N, 3, Scalar(255,0,0), 5);
+			//imshow("1234", image);
 			Mat img2;
 			image.copyTo(img2);
 
 			Mat img3;
 			Point2f pts1[] = { L[0],M[1],O[3], N };
 			Point2f	pts2[4];
+
 			if (orientation == NORTH) {
 				pts2[0] = { 20,20 }; pts2[1] = { 620, 20 }; pts2[2] = { 20, 620 }; pts2[3] = { 620, 620 }; 
 			}else
@@ -124,14 +114,10 @@ QRCode FindQrCode(Mat image)
 
 			Mat m = getPerspectiveTransform(pts1, pts2);
 			warpPerspective(img2, img3, m, Size(640, 640));
-
-					
-			QRCode qrcode = QRCode(img3);
-			return qrcode;
-
+			//imshow("1230", img3);
+			return QRCode(img3);
 		}
 	}
-
 	return QRCode();
 }
 

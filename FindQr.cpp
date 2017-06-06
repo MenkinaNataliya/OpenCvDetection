@@ -8,15 +8,12 @@ bool FindCode(cv_Point mark)
 	VideoCapture cap;
 	cap.open(0);
 	if (!cap.isOpened()) return false;
-
 	namedWindow("Video", CV_WINDOW_AUTOSIZE);
-
 	int count = 0;
 	while (true) {
 		cap >> frame;
-		if (count == 5)
-		{
-			QRCode code = FindQrCode(frame);
+		if (count == 5)	{
+			QRCode code = DetectQrCode(frame);
 
 			if (!code.Empty()) {
 				if (code.GetOrientation() != NORTH) {
@@ -24,23 +21,20 @@ bool FindCode(cv_Point mark)
 					count = -1;
 				}
 				else {
-					string message(code.Read());//после считывания сообщения необходимо проверить корректность данных
+					string message(code.Read());
 					regex rx;
 					rx = ("x: " + to_string(mark.x) + "; y: " + to_string(mark.y));/*совпадение 100%*/
 
 					if (regex_match(message.begin(), message.end(), rx))
-					{
 						return true;
-					}
 					rx = "x* " + to_string(mark.x) + "; y* " + to_string(mark.y);/*совпадение 90%*/
 					if (regex_match(message.begin(), message.end(), rx))
-					{
 						return true;
-					}
 					count--;
 				}
 			}
 			else count--;
+			count = -1;
 		}
 		count++;
 		cv::imshow("Video", frame);
@@ -62,7 +56,7 @@ cv_Point FindAnyCode()
 		cap >> frame;
 		if (count == 5)
 		{
-			QRCode code = FindQrCode(frame);
+			QRCode code = DetectQrCode(frame);
 			if (!code.Empty()) {
 				if (code.GetOrientation() != NORTH) {
 					count = -1;

@@ -1,5 +1,23 @@
 ﻿  Robot.cpp
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\robot.cpp(20): warning C4244: =: преобразование "float" в "int", возможна потеря данных
-d:\учеба\сервисный робот\opencvdetection\opencvdetection\robot.cpp(87): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.h(38): warning C4091: extern : пропускается слева от "Orientation", когда ни одна переменная не объявлена
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\robot.cpp(22): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\robot.cpp(171): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\robot.cpp(186): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+  Создание кода...
+  Компиляция...
+  OpenCvDetection.cpp
+d:\учеба\сервисный робот\opencvdetection\opencvdetection\header.h(38): warning C4091: extern : пропускается слева от "Orientation", когда ни одна переменная не объявлена
+  Создание кода...
+  Пропуск... (изменения не обнаружены)
+  cv_Point.cpp
+  cv_Label.cpp
+  WorkWithImage.cpp
+  QRCode.cpp
+  Header.cpp
+  GettingByte.cpp
+  FindQr.cpp
+  EquationOfLine.cpp
+  DetectQRCode.cpp
+  DefineTarget.cpp
   OpenCvDetection.vcxproj -> D:\Учеба\Сервисный робот\OpenCvDetection\x64\Debug\OpenCvDetection.exe
   OpenCvDetection.vcxproj -> D:\Учеба\Сервисный робот\OpenCvDetection\x64\Debug\OpenCvDetection.pdb (Full PDB)
